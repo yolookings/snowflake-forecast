@@ -17,6 +17,7 @@ app.add_middleware(
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INDEX_FILE_PATH = os.path.join(BASE_DIR, "index.html")
+ANTAM_LOGO_FILE_PATH = os.path.join(BASE_DIR, "antam.svg")
 
 def get_snowflake_connection():
     """
@@ -69,6 +70,14 @@ def read_root():
     if os.path.exists(INDEX_FILE_PATH):
         return FileResponse(INDEX_FILE_PATH)
     return {"status": "success", "message": "ANTAM Gold MRP API is running"}
+
+# Asset logo dipakai langsung oleh shell HTML. Rute ini menjaga preview lokal
+# melalui Uvicorn tetap sama dengan deployment yang menyajikan file statis.
+@app.get("/antam.svg", response_class=FileResponse)
+def read_antam_logo():
+    if os.path.exists(ANTAM_LOGO_FILE_PATH):
+        return FileResponse(ANTAM_LOGO_FILE_PATH, media_type="image/svg+xml")
+    raise HTTPException(status_code=404, detail="Logo ANTAM tidak ditemukan")
 
 # Health check
 @app.get("/api/health")
