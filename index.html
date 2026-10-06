@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Production MRP Dashboard - PT ANTAM</title>
+    <style>
+        :root {
+            --primary: #1e293b;
+            --primary-accent: #d4af37;
+            --gold-light: #fff8e7;
+            --gold-border: #f1dfa8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            padding: 24px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 28px 32px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            color: var(--primary-accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .header-title p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 500;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-status.error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            display: inline-block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-subtext {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .table-toolbar {
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            background: #fafafa;
+        }
+
+        .table-toolbar h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .btn-refresh {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-refresh:hover {
+            background: #334155;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            color: #334155;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .badge-period {
+            background: var(--gold-light);
+            color: #92400e;
+            border: 1px solid var(--gold-border);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .material-highlight {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .cost-col {
+            font-family: 'SF Mono', Consolas, Monaco, monospace;
+            font-weight: 600;
+            color: #047857;
+            text-align: right;
+        }
+
+        th.th-right {
+            text-align: right;
+        }
+
+        .empty-cell {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-title">
+                <h1>Gold Production MRP Dashboard</h1>
+                <p>Material Requirement Planning & Forecast Produksi Emas (PT ANTAM) &bull; Snowflake Cloud Integration</p>
+            </div>
+            <div id="connection-status" class="badge-status">
+                <span class="status-dot"></span>
+                <span>Connecting to Snowflake...</span>
+            </div>
+        </header>
+
+        <!-- KPI Summary Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Forecast Emas</div>
+                <div class="stat-value" id="kpi-target-gold">0 kg</div>
+                <div class="stat-subtext">Akumulasi Target 2026 (Q1 - Q4)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Estimasi Kebutuhan Biaya</div>
+                <div class="stat-value" id="kpi-total-cost">Rp 0</div>
+                <div class="stat-subtext">Total Anggaran Pengadaan Bahan Baku & Daya</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Jumlah Periode / Siklus</div>
+                <div class="stat-value" id="kpi-total-period">0 Kuartal</div>
+                <div class="stat-subtext">Rencana Operasional Terjadwal</div>
+            </div>
+        </div>
+
+        <!-- Table View -->
+        <div class="table-container">
+            <div class="table-toolbar">
+                <h2>Rincian Bill of Materials & Kebutuhan Bahan (Per Periode)</h2>
+                <button class="btn-refresh" onclick="fetchMRPData()">
+                    <span>&#x21bb;</span> Refresh Data
+                </button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Periode</th>
+                        <th>Target Emas</th>
+                        <th>Bahan Baku / Resource</th>
+                        <th>Total Kebutuhan</th>
+                        <th>Satuan</th>
+                        <th class="th-right">Estimasi Biaya (IDR)</th>
+                    </tr>
+                </thead>
+                <tbody id="mrp-table">
+                    <tr>
+                        <td colspan="6" class="empty-cell">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                <div class="spinner"></div>
+                                <span>Mengambil data dari Snowflake Data Warehouse...</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function fetchMRPData() {
+            const tableBody = document.getElementById('mrp-table');
+            const statusBadge = document.getElementById('connection-status');
+            
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="empty-cell">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <div class="spinner"></div>
+                            <span>Mengambil data dari Snowflake Data Warehouse...</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+            statusBadge.className = 'badge-status';
+            statusBadge.innerHTML = '<span class="status-dot"></span><span>Menghubungi API...</span>';
+
+            try {
+                // Menggunakan endpoint relatif /api/mrp agar kompatibel di semua host/port
+                const response = await fetch('/api/mrp');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+
+                if (result.status !== 'success' || !result.data) {
+                    throw new Error(result.message || 'Format data dari Snowflake tidak valid.');
+                }
+
+                const data = result.data;
+                tableBody.innerHTML = '';
+
+                let totalCost = 0;
+                let periods = new Set();
+                let periodTargetMap = new Map();
+
+                data.forEach(item => {
+                    const row = `
+                        <tr>
+                            <td><span class="badge-period">${item.period}</span></td>
+                            <td><b>${Number(item.target_gold_kg).toLocaleString('id-ID')} kg</b></td>
+                            <td class="material-highlight">${item.material_name}</td>
+                            <td><b>${Number(item.total_material_required).toLocaleString('id-ID')}</b></td>
+                            <td>${item.unit}</td>
+                            <td class="cost-col">Rp ${Number(item.total_cost_idr).toLocaleString('id-ID')}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+
+                    totalCost += Number(item.total_cost_idr) || 0;
+                    periods.add(item.period);
+                    periodTargetMap.set(item.period, Number(item.target_gold_kg) || 0);
+                });
+
+                // Hitung akumulasi target emas (hanya sekali per kuartal)
+                let totalTargetGold = 0;
+                periodTargetMap.forEach(target => {
+                    totalTargetGold += target;
+                });
+
+                // Update KPI Cards
+                document.getElementById('kpi-target-gold').innerText = totalTargetGold.toLocaleString('id-ID') + ' kg';
+                document.getElementById('kpi-total-cost').innerText = 'Rp ' + totalCost.toLocaleString('id-ID');
+                document.getElementById('kpi-total-period').innerText = periods.size + ' Kuartal';
+
+                // Update Status
+                statusBadge.className = 'badge-status';
+                statusBadge.innerHTML = '<span class="status-dot"></span><span>Terhubung ke Snowflake (Live)</span>';
+
+            } catch (err) {
+                console.error("Fetch error:", err);
+                statusBadge.className = 'badge-status error';
+                statusBadge.innerHTML = '<span class="status-dot"></span><span>Koneksi Gagal</span>';
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-cell" style="color: #ef4444;">
+                            <strong>Gagal memuat data dari Snowflake:</strong><br>
+                            <span style="font-size: 13px; color: #64748b;">${err.message}</span>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Panggil saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', fetchMRPData);
+    </script>
+</body>
+</html>
