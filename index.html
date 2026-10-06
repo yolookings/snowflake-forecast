@@ -3,20 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Production MRP Dashboard - PT ANTAM</title>
+    <title>PT ANTAM - Gold Production MRP & Material Simulation System</title>
     <style>
         :root {
-            --primary: #1e293b;
-            --primary-accent: #d4af37;
-            --gold-light: #fff8e7;
-            --gold-border: #f1dfa8;
-            --bg: #f8fafc;
+            --bg-dark: #090d16;
+            --sidebar-bg: #0f172a;
+            --sidebar-hover: #1e293b;
+            --sidebar-active: #233554;
             --card-bg: #ffffff;
+            --page-bg: #f8fafc;
             --text-dark: #0f172a;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
+            --gold-primary: #d4af37;
+            --gold-hover: #b89628;
+            --gold-light: #fffbeb;
+            --gold-border: #fef08a;
+            --primary: #1e293b;
             --success: #10b981;
             --danger: #ef4444;
+            --info: #0284c7;
         }
 
         * {
@@ -26,98 +32,272 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--page-bg);
             color: var(--text-dark);
-            padding: 24px;
-            line-height: 1.5;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            color: white;
-            padding: 28px 32px;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-            margin-bottom: 24px;
+            height: 100vh;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
+            overflow: hidden;
         }
 
-        .header-title h1 {
-            font-size: 24px;
-            color: var(--primary-accent);
+        /* SIDEBAR STYLES */
+        .sidebar {
+            width: 270px;
+            background-color: var(--sidebar-bg);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            border-right: 1px solid #1e293b;
+            user-select: none;
+        }
+
+        .sidebar-brand {
+            padding: 24px 20px;
+            border-bottom: 1px solid #1e293b;
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 6px;
+            gap: 12px;
         }
 
-        .header-title p {
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #d4af37, #f59e0b);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #0f172a;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+        }
+
+        .brand-text h2 {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: var(--gold-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 600;
+            letter-spacing: 1px;
+            padding: 8px 12px 4px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 8px;
             color: #94a3b8;
             font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
         }
 
-        .badge-status {
-            display: inline-flex;
+        .nav-item:hover {
+            background-color: var(--sidebar-hover);
+            color: #ffffff;
+        }
+
+        .nav-item.active {
+            background-color: var(--sidebar-active);
+            color: var(--gold-primary);
+            font-weight: 600;
+            box-shadow: inset 3px 0 0 var(--gold-primary);
+        }
+
+        .nav-icon {
+            font-size: 18px;
+            width: 22px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 16px 18px;
+            border-top: 1px solid #1e293b;
+            background-color: #090d16;
+        }
+
+        .cloud-badge {
+            display: flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 14px;
-            border-radius: 9999px;
-            font-size: 13px;
-            font-weight: 500;
-            background: rgba(16, 185, 129, 0.15);
+            font-size: 12px;
             color: #34d399;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
-        .badge-status.error {
-            background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .status-dot {
+        .cloud-dot {
             width: 8px;
             height: 8px;
+            background-color: #10b981;
             border-radius: 50%;
-            background: currentColor;
-            display: inline-block;
+            box-shadow: 0 0 8px #10b981;
         }
 
+        .wh-info {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* MAIN CONTENT STYLES */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-navbar {
+            height: 64px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .page-header h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .page-header p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            color: var(--text-dark);
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-action:hover {
+            background-color: #f1f5f9;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #d4af37, #c59b27);
+            color: #0f172a;
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-gold:hover {
+            background: linear-gradient(135deg, #e5bf47, #d4af37);
+        }
+
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px;
+        }
+
+        /* TAB PANELS */
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* STAT CARDS */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 18px;
             margin-bottom: 24px;
         }
 
         .stat-card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 10px;
+            background: #ffffff;
             border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--gold-primary);
         }
 
         .stat-label {
-            font-size: 13px;
+            font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 600;
             color: var(--text-muted);
-            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
         .stat-value {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--primary);
         }
@@ -125,48 +305,152 @@
         .stat-subtext {
             font-size: 12px;
             color: var(--text-muted);
-            margin-top: 4px;
+            margin-top: 6px;
         }
 
-        .table-container {
-            background: var(--card-bg);
-            border-radius: 12px;
+        /* DASHBOARD SECTION LAYOUT */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 960px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-box {
+            background: #ffffff;
             border: 1px solid var(--border-color);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            overflow: hidden;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
         }
 
-        .table-toolbar {
-            padding: 18px 24px;
+        .card-box-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            background: #fafafa;
+            margin-bottom: 18px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
         }
 
-        .table-toolbar h2 {
+        .card-box-header h3 {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary);
         }
 
-        .btn-refresh {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+        /* QUARTER TARGET PROGRESS BARS */
+        .quarter-item {
+            margin-bottom: 16px;
         }
 
-        .btn-refresh:hover {
-            background: #334155;
+        .quarter-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            height: 10px;
+            background-color: #f1f5f9;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37, #f59e0b);
+            border-radius: 9999px;
+            transition: width 0.6s ease;
+        }
+
+        /* PROCESS FLOW INFOGRAPHIC */
+        .process-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .process-step {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-num {
+            width: 26px;
+            height: 26px;
+            background: var(--primary);
+            color: #ffffff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .step-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* DATA VIEWER TABLE */
+        .filter-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-select, .input-text {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        .input-select:focus, .input-text:focus {
+            border-color: var(--gold-primary);
+        }
+
+        .data-table-container {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
         }
 
         table {
@@ -176,72 +460,223 @@
         }
 
         th {
-            background: #f1f5f9;
+            background-color: #f8fafc;
             color: #475569;
+            font-size: 12px;
             font-weight: 600;
-            font-size: 13px;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border-color);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         td {
             padding: 14px 18px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 14px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
             color: #334155;
         }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover {
-            background-color: #f8fafc;
+        tr:hover td {
+            background-color: #fbfcfe;
         }
 
         .badge-period {
             background: var(--gold-light);
             color: #92400e;
             border: 1px solid var(--gold-border);
-            padding: 4px 10px;
-            border-radius: 6px;
+            padding: 3px 8px;
+            border-radius: 4px;
             font-weight: 600;
-            font-size: 12px;
-            display: inline-block;
+            font-size: 11px;
         }
 
-        .material-highlight {
-            font-weight: 600;
-            color: var(--primary);
+        .text-right {
+            text-align: right;
         }
 
-        .cost-col {
+        .cost-val {
             font-family: 'SF Mono', Consolas, Monaco, monospace;
             font-weight: 600;
             color: #047857;
-            text-align: right;
         }
 
-        th.th-right {
-            text-align: right;
+        /* FORECAST / SIMULATOR STYLES */
+        .simulator-header {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: #ffffff;
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+        }
+
+        .simulator-controls {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .target-input-box {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 4px 8px;
+            border: 2px solid var(--gold-primary);
+        }
+
+        .target-input-box input {
+            border: none;
+            outline: none;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            width: 140px;
+            padding: 6px;
+        }
+
+        .target-input-box select {
+            border: none;
+            background: #f1f5f9;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+            outline: none;
+        }
+
+        .btn-calc {
+            background: linear-gradient(135deg, #d4af37, #f59e0b);
+            color: #0f172a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-calc:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4);
+        }
+
+        .presets {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .preset-btn {
+            background: rgba(255,255,255,0.1);
+            color: #f1f5f9;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.15s;
+        }
+
+        .preset-btn:hover {
+            background: rgba(212, 175, 55, 0.25);
+            border-color: var(--gold-primary);
+            color: #ffffff;
+        }
+
+        /* METALLURGICAL STAGE ACCORDION / CARDS */
+        .stage-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+
+        .stage-header {
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stage-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stage-badge {
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .stage-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stage-cost {
+            font-size: 14px;
+            font-weight: 700;
+            color: #047857;
+        }
+
+        .stage-body {
+            padding: 20px;
+        }
+
+        .stage-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .chem-tag {
+            display: inline-block;
+            background: #f1f5f9;
+            color: #334155;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
         }
 
         .empty-cell {
             text-align: center;
-            padding: 40px;
+            padding: 30px;
             color: var(--text-muted);
+            font-size: 13px;
         }
 
         .spinner {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(212, 175, 55, 0.3);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
             border-radius: 50%;
-            border-top-color: var(--primary-accent);
-            animation: spin 1s ease-in-out infinite;
+            border-top-color: var(--gold-primary);
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
@@ -251,160 +686,523 @@
 </head>
 <body>
 
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-title">
-                <h1>Gold Production MRP Dashboard</h1>
-                <p>Material Requirement Planning & Forecast Produksi Emas (PT ANTAM) &bull; Snowflake Cloud Integration</p>
+    <!-- 1. SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">Au</div>
+            <div class="brand-text">
+                <h2>PT ANTAM Tbk</h2>
+                <p>Gold MRP & Metallurgy</p>
             </div>
-            <div id="connection-status" class="badge-status">
-                <span class="status-dot"></span>
-                <span>Connecting to Snowflake...</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-label">Menu Navigasi</div>
+            <a class="nav-item active" onclick="switchTab('dashboard')">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('data-viewer')">
+                <span class="nav-icon">📋</span>
+                <span>Data Viewer</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('forecast')">
+                <span class="nav-icon">🔮</span>
+                <span>Forecast & Simulator</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="cloud-badge">
+                <span class="cloud-dot"></span>
+                <span id="sidebar-cloud-status">Snowflake Live</span>
+            </div>
+            <div class="wh-info">
+                <span>WH: COMPUTE_WH</span>
+                <span>Auto-Suspend: 60s</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 2. MAIN CONTENT WRAPPER -->
+    <div class="main-wrapper">
+        <!-- Top Navbar -->
+        <header class="top-navbar">
+            <div class="page-header">
+                <h1 id="page-title">Executive Summary Dashboard</h1>
+                <p id="page-subtitle">Ringkasan Target Produksi Emas & Monitoring Kebutuhan Bahan Baku</p>
+            </div>
+            <div class="navbar-actions">
+                <button class="btn-action" onclick="fetchSnowflakeData()">
+                    <span>&#x21bb;</span> Sync Snowflake
+                </button>
             </div>
         </header>
 
-        <!-- KPI Summary Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Total Forecast Emas</div>
-                <div class="stat-value" id="kpi-target-gold">0 kg</div>
-                <div class="stat-subtext">Akumulasi Target 2026 (Q1 - Q4)</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Total Estimasi Kebutuhan Biaya</div>
-                <div class="stat-value" id="kpi-total-cost">Rp 0</div>
-                <div class="stat-subtext">Total Anggaran Pengadaan Bahan Baku & Daya</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Jumlah Periode / Siklus</div>
-                <div class="stat-value" id="kpi-total-period">0 Kuartal</div>
-                <div class="stat-subtext">Rencana Operasional Terjadwal</div>
-            </div>
-        </div>
+        <!-- Scrollable Content Area -->
+        <main class="content-scroll">
 
-        <!-- Table View -->
-        <div class="table-container">
-            <div class="table-toolbar">
-                <h2>Rincian Bill of Materials & Kebutuhan Bahan (Per Periode)</h2>
-                <button class="btn-refresh" onclick="fetchMRPData()">
-                    <span>&#x21bb;</span> Refresh Data
-                </button>
-            </div>
+            <!-- ============================================== -->
+            <!-- TAB 1: DASHBOARD (EXECUTIVE SUMMARY)           -->
+            <!-- ============================================== -->
+            <section id="tab-dashboard" class="tab-panel active">
+                <!-- KPI Stat Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Target Produksi 2026</div>
+                        <div class="stat-value" id="dash-target-gold">0 kg</div>
+                        <div class="stat-subtext">Akumulasi Target 4 Kuartal (Q1 - Q4)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Anggaran Pengadaan</div>
+                        <div class="stat-value" id="dash-total-cost">Rp 0</div>
+                        <div class="stat-subtext">Total Belanja Bahan Baku & Daya Listrik</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Rata-rata Biaya / Kg Emas</div>
+                        <div class="stat-value" id="dash-avg-cost">Rp 0</div>
+                        <div class="stat-subtext">Unit Production Cost (IDR / Kg Au)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Siklus Periode Aktif</div>
+                        <div class="stat-value" id="dash-period-count">0 Kuartal</div>
+                        <div class="stat-subtext">Terjadwal di Snowflake Cloud</div>
+                    </div>
+                </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Periode</th>
-                        <th>Target Emas</th>
-                        <th>Bahan Baku / Resource</th>
-                        <th>Total Kebutuhan</th>
-                        <th>Satuan</th>
-                        <th class="th-right">Estimasi Biaya (IDR)</th>
-                    </tr>
-                </thead>
-                <tbody id="mrp-table">
-                    <tr>
-                        <td colspan="6" class="empty-cell">
-                            <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-                                <div class="spinner"></div>
-                                <span>Mengambil data dari Snowflake Data Warehouse...</span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                <div class="dashboard-grid">
+                    <!-- Progress Per Kuartal -->
+                    <div class="card-box">
+                        <div class="card-box-header">
+                            <h3>Rencana Produksi per Kuartal (2026)</h3>
+                            <span style="font-size: 12px; color: var(--text-muted);">Target (kg)</span>
+                        </div>
+                        <div id="quarter-progress-list">
+                            <div class="empty-cell"><div class="spinner"></div> Memuat data kuartal...</div>
+                        </div>
+                    </div>
+
+                    <!-- Distribusi Biaya Bahan Baku -->
+                    <div class="card-box">
+                        <div class="card-box-header">
+                            <h3>Distribusi Biaya Bahan Baku</h3>
+                            <span style="font-size: 12px; color: var(--text-muted);">Persentase Anggaran</span>
+                        </div>
+                        <div id="cost-distribution-list">
+                            <div class="empty-cell"><div class="spinner"></div> Memuat komposisi biaya...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alur Proses Metalurgi Infografis -->
+                <div class="card-box">
+                    <div class="card-box-header">
+                        <h3>Alur Siklus Metalurgi: Dari Padatan Menjadi Buih & Bubuk Emas</h3>
+                        <span style="font-size: 12px; color: var(--gold-primary); font-weight: 600;">SOP Pabrik Pengolahan</span>
+                    </div>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-num">1</div>
+                            <div class="step-title">Padatan (Mining)</div>
+                            <div class="step-desc">Penambangan batuan bijih emas (ore) & penggilingan halus di SAG / Ball Mill.</div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-num">2</div>
+                            <div class="step-title">Padatan &rarr; Buih (Flotasi)</div>
+                            <div class="step-desc">Injeksi reagen PAX (Kolektor) & MIBC (Pembuih) untuk mengangkat mineral ke busa.</div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-num">3</div>
+                            <div class="step-title">Buih &rarr; Larutan (Leaching)</div>
+                            <div class="step-desc">Pelindian buih konsentrat dengan Sodium Cyanide (NaCN) & adsorpsi Karbon Aktif.</div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-num">4</div>
+                            <div class="step-title">Larutan &rarr; Bubuk & Batang</div>
+                            <div class="step-desc">Presipitasi serbuk Zinc (Merrill-Crowe) menjadi bubuk emas, lalu dilebur di furnace.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================== -->
+            <!-- TAB 2: DATA VIEWER (SNOWFLAKE TABLE DATA)      -->
+            <!-- ============================================== -->
+            <section id="tab-data-viewer" class="tab-panel">
+                <div class="filter-toolbar">
+                    <div class="filter-group">
+                        <select id="filter-period" class="input-select" onchange="renderTableData()">
+                            <option value="ALL">Semua Periode (Q1 - Q4)</option>
+                            <option value="2026-Q1">2026-Q1</option>
+                            <option value="2026-Q2">2026-Q2</option>
+                            <option value="2026-Q3">2026-Q3</option>
+                            <option value="2026-Q4">2026-Q4</option>
+                        </select>
+                        <input type="text" id="search-material" class="input-text" placeholder="Cari bahan baku / resource..." onkeyup="renderTableData()">
+                    </div>
+                    <div style="font-size: 13px; color: var(--text-muted);" id="table-summary-count">
+                        Menampilkan 0 data
+                    </div>
+                </div>
+
+                <div class="data-table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Periode</th>
+                                <th>Target Emas</th>
+                                <th>Bahan Baku / Resource</th>
+                                <th>Total Kebutuhan</th>
+                                <th>Satuan</th>
+                                <th class="text-right">Estimasi Biaya (IDR)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mrp-table-body">
+                            <tr>
+                                <td colspan="6" class="empty-cell">
+                                    <div class="spinner"></div> Mengambil data live dari Snowflake...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ============================================== -->
+            <!-- TAB 3: FORECAST & MATERIAL SIMULATOR           -->
+            <!-- ============================================== -->
+            <section id="tab-forecast" class="tab-panel">
+                <!-- Simulator Header & Controls -->
+                <div class="simulator-header">
+                    <h2 style="font-size: 18px; margin-bottom: 6px;">Kalkulator Simulasi Kebutuhan Bijih & Kimiawi (MRP Forecast)</h2>
+                    <p style="font-size: 13px; color: #cbd5e1;">
+                        Prediksi kebutuhan batuan bijih mentah (*Ore*) dan campuran reagen kimiawi dari fase <b>Padatan &rarr; Buih (*Flotation*) &rarr; Bubuk Emas (*Precipitate*)</b>.
+                    </p>
+
+                    <div class="simulator-controls">
+                        <div class="target-input-box">
+                            <input type="number" id="sim-target-input" value="1000" min="1" step="any">
+                            <select id="sim-unit-select">
+                                <option value="kg">Kg Emas</option>
+                                <option value="ton">Ton Emas</option>
+                            </select>
+                        </div>
+                        <button class="btn-calc" onclick="runSimulation()">
+                            Hitung Kebutuhan Bahan &rarr;
+                        </button>
+                    </div>
+
+                    <div class="presets">
+                        <span>Preset Cepat:</span>
+                        <button class="preset-btn" onclick="setPreset(500, 'kg')">500 Kg</button>
+                        <button class="preset-btn" onclick="setPreset(1000, 'kg')">1.000 Kg (1 Ton)</button>
+                        <button class="preset-btn" onclick="setPreset(5000, 'kg')">5.000 Kg (5 Ton)</button>
+                        <button class="preset-btn" onclick="setPreset(1000, 'ton')">1.000 Ton Emas</button>
+                    </div>
+                </div>
+
+                <!-- Simulation Quick KPI Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Target Produksi Emas</div>
+                        <div class="stat-value" id="sim-gold-kpi">1.000 kg</div>
+                        <div class="stat-subtext" id="sim-gold-sub">Setara 1.000.000 gram</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Batuan Ore Dibutuhkan</div>
+                        <div class="stat-value" id="sim-ore-kpi">150.000 Ton</div>
+                        <div class="stat-subtext">Kadar rata-rata ~6.67 g/ton</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Anggaran Pengadaan</div>
+                        <div class="stat-value" id="sim-cost-kpi">Rp 186 Miliar</div>
+                        <div class="stat-subtext">Termasuk Ore, Kimiawi & Daya</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Reagen Kimiawi Utama</div>
+                        <div class="stat-value" id="sim-chem-kpi">301 Ton</div>
+                        <div class="stat-subtext">PAX, MIBC, Kapur, NaCN, Zn</div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Stages Breakdown -->
+                <div id="simulation-stages-container">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+
+        </main>
     </div>
 
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        async function fetchMRPData() {
-            const tableBody = document.getElementById('mrp-table');
-            const statusBadge = document.getElementById('connection-status');
+        // State Global
+        let snowflakeData = [];
+
+        // Tab Navigation
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+            const targetPanel = document.getElementById('tab-' + tabId);
+            if (targetPanel) targetPanel.classList.add('active');
+
+            const navLinks = document.querySelectorAll('.nav-item');
+            if (tabId === 'dashboard') {
+                navLinks[0].classList.add('active');
+                document.getElementById('page-title').innerText = "Executive Summary Dashboard";
+                document.getElementById('page-subtitle').innerText = "Ringkasan Target Produksi Emas & Monitoring Kebutuhan Bahan Baku";
+            } else if (tabId === 'data-viewer') {
+                navLinks[1].classList.add('active');
+                document.getElementById('page-title').innerText = "Snowflake MRP Data Viewer";
+                document.getElementById('page-subtitle').innerText = "Data Transaksional Tabel & View v_mrp_calculation dari Data Warehouse";
+            } else if (tabId === 'forecast') {
+                navLinks[2].classList.add('active');
+                document.getElementById('page-title').innerText = "Forecast & Metallurgical Material Simulator";
+                document.getElementById('page-subtitle').innerText = "Simulasi Kebutuhan Bahan Kimia & Ore (Padatan -> Buih -> Bubuk Emas)";
+                runSimulation();
+            }
+        }
+
+        // Fetch Data dari Snowflake API
+        async function fetchSnowflakeData() {
+            const tableBody = document.getElementById('mrp-table-body');
+            const cloudBadge = document.getElementById('sidebar-cloud-status');
             
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="6" class="empty-cell">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-                            <div class="spinner"></div>
-                            <span>Mengambil data dari Snowflake Data Warehouse...</span>
-                        </div>
-                    </td>
-                </tr>
-            `;
-
-            statusBadge.className = 'badge-status';
-            statusBadge.innerHTML = '<span class="status-dot"></span><span>Menghubungi API...</span>';
-
             try {
-                // Menggunakan endpoint relatif /api/mrp agar kompatibel di semua host/port
-                const response = await fetch('/api/mrp');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const result = await response.json();
+                cloudBadge.innerText = "Syncing...";
+                const res = await fetch('/api/mrp');
+                if (!res.ok) throw new Error("HTTP error " + res.status);
+                const json = await res.json();
 
-                if (result.status !== 'success' || !result.data) {
-                    throw new Error(result.message || 'Format data dari Snowflake tidak valid.');
+                if (json.status !== 'success' || !json.data) {
+                    throw new Error(json.message || "Gagal membaca data");
                 }
 
-                const data = result.data;
-                tableBody.innerHTML = '';
-
-                let totalCost = 0;
-                let periods = new Set();
-                let periodTargetMap = new Map();
-
-                data.forEach(item => {
-                    const row = `
-                        <tr>
-                            <td><span class="badge-period">${item.period}</span></td>
-                            <td><b>${Number(item.target_gold_kg).toLocaleString('id-ID')} kg</b></td>
-                            <td class="material-highlight">${item.material_name}</td>
-                            <td><b>${Number(item.total_material_required).toLocaleString('id-ID')}</b></td>
-                            <td>${item.unit}</td>
-                            <td class="cost-col">Rp ${Number(item.total_cost_idr).toLocaleString('id-ID')}</td>
-                        </tr>
-                    `;
-                    tableBody.innerHTML += row;
-
-                    totalCost += Number(item.total_cost_idr) || 0;
-                    periods.add(item.period);
-                    periodTargetMap.set(item.period, Number(item.target_gold_kg) || 0);
-                });
-
-                // Hitung akumulasi target emas (hanya sekali per kuartal)
-                let totalTargetGold = 0;
-                periodTargetMap.forEach(target => {
-                    totalTargetGold += target;
-                });
-
-                // Update KPI Cards
-                document.getElementById('kpi-target-gold').innerText = totalTargetGold.toLocaleString('id-ID') + ' kg';
-                document.getElementById('kpi-total-cost').innerText = 'Rp ' + totalCost.toLocaleString('id-ID');
-                document.getElementById('kpi-total-period').innerText = periods.size + ' Kuartal';
-
-                // Update Status
-                statusBadge.className = 'badge-status';
-                statusBadge.innerHTML = '<span class="status-dot"></span><span>Terhubung ke Snowflake (Live)</span>';
-
+                snowflakeData = json.data;
+                cloudBadge.innerText = "Snowflake Live";
+                renderDashboardSummary();
+                renderTableData();
             } catch (err) {
-                console.error("Fetch error:", err);
-                statusBadge.className = 'badge-status error';
-                statusBadge.innerHTML = '<span class="status-dot"></span><span>Koneksi Gagal</span>';
+                console.error("Snowflake sync error:", err);
+                cloudBadge.innerText = "Connection Failed";
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="6" class="empty-cell" style="color: #ef4444;">
-                            <strong>Gagal memuat data dari Snowflake:</strong><br>
-                            <span style="font-size: 13px; color: #64748b;">${err.message}</span>
+                            Gagal memuat data dari Snowflake API: ${err.message}
                         </td>
                     </tr>
                 `;
             }
         }
 
-        // Panggil saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', fetchMRPData);
+        // Render Dashboard Visual
+        function renderDashboardSummary() {
+            if (!snowflakeData.length) return;
+
+            let totalCost = 0;
+            let periodTargetMap = new Map();
+            let materialCostMap = new Map();
+
+            snowflakeData.forEach(item => {
+                const cost = Number(item.total_cost_idr) || 0;
+                totalCost += cost;
+
+                periodTargetMap.set(item.period, Number(item.target_gold_kg) || 0);
+
+                const prevMatCost = materialCostMap.get(item.material_name) || 0;
+                materialCostMap.set(item.material_name, prevMatCost + cost);
+            });
+
+            let totalTargetGold = 0;
+            periodTargetMap.forEach(v => totalTargetGold += v);
+
+            const avgCostPerKg = totalTargetGold > 0 ? (totalCost / totalTargetGold) : 0;
+
+            // Update KPI Cards
+            document.getElementById('dash-target-gold').innerText = totalTargetGold.toLocaleString('id-ID') + ' kg';
+            document.getElementById('dash-total-cost').innerText = 'Rp ' + totalCost.toLocaleString('id-ID');
+            document.getElementById('dash-avg-cost').innerText = 'Rp ' + Math.round(avgCostPerKg).toLocaleString('id-ID');
+            document.getElementById('dash-period-count').innerText = periodTargetMap.size + ' Kuartal';
+
+            // Render Quarter Progress
+            const quarterContainer = document.getElementById('quarter-progress-list');
+            quarterContainer.innerHTML = '';
+            
+            let maxTarget = 1000;
+            periodTargetMap.forEach(v => { if (v > maxTarget) maxTarget = v; });
+
+            periodTargetMap.forEach((target, period) => {
+                const pct = Math.round((target / maxTarget) * 100);
+                quarterContainer.innerHTML += `
+                    <div class="quarter-item">
+                        <div class="quarter-meta">
+                            <span><b>${period}</b></span>
+                            <span style="color: var(--gold-primary);">${target.toLocaleString('id-ID')} kg Au</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: ${pct}%;"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Render Material Cost Breakdown
+            const costContainer = document.getElementById('cost-distribution-list');
+            costContainer.innerHTML = '';
+
+            materialCostMap.forEach((cost, matName) => {
+                const pct = totalCost > 0 ? ((cost / totalCost) * 100).toFixed(1) : 0;
+                costContainer.innerHTML += `
+                    <div class="quarter-item">
+                        <div class="quarter-meta">
+                            <span>${matName}</span>
+                            <span>Rp ${cost.toLocaleString('id-ID')} (${pct}%)</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: ${pct}%; background: linear-gradient(90deg, #10b981, #059669);"></div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Render Table di Data Viewer
+        function renderTableData() {
+            const tableBody = document.getElementById('mrp-table-body');
+            const selectedPeriod = document.getElementById('filter-period').value;
+            const searchQuery = document.getElementById('search-material').value.toLowerCase().trim();
+
+            const filtered = snowflakeData.filter(item => {
+                const matchPeriod = (selectedPeriod === 'ALL') || (item.period === selectedPeriod);
+                const matchSearch = (!searchQuery) || (item.material_name.toLowerCase().includes(searchQuery));
+                return matchPeriod && matchSearch;
+            });
+
+            document.getElementById('table-summary-count').innerText = `Menampilkan ${filtered.length} baris data`;
+
+            if (filtered.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-cell">Tidak ada data yang sesuai filter.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = filtered.map(item => `
+                <tr>
+                    <td><span class="badge-period">${item.period}</span></td>
+                    <td><b>${Number(item.target_gold_kg).toLocaleString('id-ID')} kg</b></td>
+                    <td><b>${item.material_name}</b></td>
+                    <td>${Number(item.total_material_required).toLocaleString('id-ID')}</td>
+                    <td>${item.unit}</td>
+                    <td class="text-right cost-val">Rp ${Number(item.total_cost_idr).toLocaleString('id-ID')}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Forecast & Simulation Logic
+        function setPreset(val, unit) {
+            document.getElementById('sim-target-input').value = val;
+            document.getElementById('sim-unit-select').value = unit;
+            runSimulation();
+        }
+
+        async function runSimulation() {
+            const targetVal = parseFloat(document.getElementById('sim-target-input').value) || 1000;
+            const unit = document.getElementById('sim-unit-select').value;
+            const container = document.getElementById('simulation-stages-container');
+
+            container.innerHTML = '<div class="empty-cell"><div class="spinner"></div> Menghitung kebutuhan bahan kimiawi & bijih...</div>';
+
+            try {
+                // Call API simulate endpoint
+                const res = await fetch(`/api/simulate?target=${targetVal}&unit=${unit}`);
+                if (!res.ok) throw new Error("HTTP error " + res.status);
+                const json = await res.json();
+
+                const targetKg = json.input.target_gold_kg;
+                const totalCost = json.total_cost_idr;
+
+                // Update Simulation KPIs
+                document.getElementById('sim-gold-kpi').innerText = targetKg >= 1000 ? 
+                    (targetKg / 1000).toLocaleString('id-ID') + ' Ton' : 
+                    targetKg.toLocaleString('id-ID') + ' kg';
+                document.getElementById('sim-gold-sub').innerText = `Setara ${targetKg.toLocaleString('id-ID')} kg emas batangan`;
+
+                const oreItem = json.stages[0].items[0];
+                document.getElementById('sim-ore-kpi').innerText = Number(oreItem.total_quantity).toLocaleString('id-ID') + ' Ton';
+                document.getElementById('sim-cost-kpi').innerText = 'Rp ' + totalCost.toLocaleString('id-ID');
+
+                // Total chemical weight (PAX + MIBC + Lime + Cyanide + Carbon + Zinc + Flux)
+                let totalChemKg = 0;
+                json.stages.forEach(st => {
+                    st.items.forEach(it => {
+                        if (it.unit === 'Kg') totalChemKg += it.total_quantity;
+                    });
+                });
+                document.getElementById('sim-chem-kpi').innerText = totalChemKg >= 1000 ? 
+                    (totalChemKg / 1000).toLocaleString('id-ID') + ' Ton' : 
+                    totalChemKg.toLocaleString('id-ID') + ' Kg';
+
+                // Render Stages Cards
+                container.innerHTML = json.stages.map(st => `
+                    <div class="stage-card">
+                        <div class="stage-header">
+                            <div class="stage-title">
+                                <span class="stage-badge">Tahap ${st.stage_id}</span>
+                                <span class="stage-name">${st.stage_name}</span>
+                            </div>
+                            <div class="stage-cost">Subtotal: Rp ${st.subtotal_cost_idr.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="stage-body">
+                            <p class="stage-desc">${st.description}</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Bahan / Reagen Kimia</th>
+                                        <th>Fungsi Kimiawi</th>
+                                        <th>Total Kebutuhan</th>
+                                        <th>Satuan</th>
+                                        <th>Estimasi Biaya Satuan</th>
+                                        <th class="text-right">Subtotal Biaya (IDR)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${st.items.map(it => `
+                                        <tr>
+                                            <td>
+                                                <div style="font-weight: 700; color: var(--primary);">${it.name}</div>
+                                                <span class="chem-tag">${it.category}</span>
+                                            </td>
+                                            <td style="font-size: 12px; color: #475569; max-width: 280px;">${it.function}</td>
+                                            <td><b>${Number(it.total_quantity).toLocaleString('id-ID')}</b></td>
+                                            <td>${it.unit}</td>
+                                            <td>Rp ${Number(it.unit_cost_idr).toLocaleString('id-ID')}</td>
+                                            <td class="text-right cost-val">Rp ${Number(it.total_cost_idr).toLocaleString('id-ID')}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error("Simulation error:", err);
+                container.innerHTML = `
+                    <div class="empty-cell" style="color: #ef4444;">
+                        Gagal menghitung simulasi: ${err.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Init saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchSnowflakeData();
+        });
     </script>
 </body>
 </html>

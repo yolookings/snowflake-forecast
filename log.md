@@ -198,3 +198,62 @@ def get_snowflake_connection():
             role="ACCOUNTADMIN"
         )
 ```
+
+---
+
+## 5. Implementasi Navigasi Sidebar (3 Menu) & Simulator Metalurgi Emas (Padatan &rarr; Buih &rarr; Bubuk)
+
+### 🔍 Masalah & Analisis
+- Tampilan sebelumnya hanya berupa satu halaman tabel statis sederhana tanpa pemisahan fungsi analitik, operasional, dan prediksi.
+- Diperlukan struktur modular berbasis **Sidebar Navigasi** yang membagi aplikasi menjadi 3 menu utama:
+  1. **Dashboard**: Ringkasan eksekutif target tahunan, grafik progress kuartal, komposisi biaya, dan alur SOP metalurgi.
+  2. **Data Viewer**: Tabel operasional untuk menjelajahi data Snowflake (`v_mrp_calculation`) dengan filter periode dan fitur pencarian.
+  3. **Forecast & Simulator**: Fitur simulasi prediksi kebutuhan bahan baku bila user ingin memproduksi emas dalam jumlah tertentu (misal: 1.000 Ton atau 1.000 Kg emas), lengkap dengan kalkulasi kimiawi transisi fase:
+     - **Padatan (Ore Mining & Grinding)**: Kebutuhan batuan bijih mentah.
+     - **Padatan &rarr; Buih (Flotasi Konsentrat)**: Penambahan Kolektor (*Potassium Amyl Xanthate / PAX*), Pembuih (*MIBC*), dan Pengatur pH (*Kapur Tohor*).
+     - **Buih &rarr; Larutan (Pelindian / Leaching)**: Pelarutan emas dengan *Sodium Cyanide (NaCN)* dan adsorpsi *Karbon Aktif*.
+     - **Larutan &rarr; Bubuk & Batangan (Presipitasi & Smelting)**: Reduksi larutan menjadi endapan bubuk emas menggunakan *Zinc Powder (Merrill-Crowe)*, peleburan dengan *Flux Boraks*, dan konsumsi daya listrik furnace.
+
+### 💡 Solusi
+- **Backend API (`api/index.py`):** Menambahkan endpoint fleksibel `/api/simulate` yang menerima parameter `target` dan `unit` (kg/ton), kemudian menghitung secara detail kebutuhan kuantitas, satuan, biaya satuan, subtotal, dan deskripsi fungsi kimiawi untuk tiap tahapan proses.
+- **Frontend Interaktif (`index.html`):** 
+  - Membangun sidebar bernuansa *corporate dark gold* PT ANTAM dengan indikator live cloud Snowflake.
+  - Menerapkan arsitektur *Single Page Application* (SPA tab switching) tanpa *reload* halaman.
+  - Menambahkan kontrol simulasi dengan *preset buttons* (500 Kg, 1.000 Kg, 5.000 Kg, 1.000 Ton), kartu rincian reagen kimia, serta tabel breakdown per tahapan metalurgi.
+
+### 💻 Kode Singkat
+
+**1. Endpoint Simulasi Metalurgi (`api/index.py`):**
+```python
+@app.get("/api/simulate")
+def simulate_forecast(target: float = 1000.0, unit: str = "kg"):
+    target_kg = target * 1000.0 if unit.lower() == "ton" else target
+    
+    # Formula kebutuhan per 1 kg emas:
+    # 1. Padatan: 150 Ton Gold Ore
+    # 2. Padatan -> Buih: 22.5 kg PAX (Collector), 7.5 kg MIBC (Frother), 225 kg Kapur Tohor
+    # 3. Buih -> Larutan: 45 kg Sodium Cyanide, 12 kg Karbon Aktif
+    # 4. Larutan -> Bubuk: 1.2 kg Zinc Powder (Merrill-Crowe), 2.5 kg Flux, 1.200 kWh Listrik
+    
+    # Hitung total kuantitas dan estimasi biaya per tahapan metalurgi
+    # Kembalikan response JSON terstruktur
+```
+
+**2. Tab Switching & Real-Time Calculation (`index.html`):**
+```javascript
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    
+    document.getElementById('tab-' + tabId).classList.add('active');
+    if (tabId === 'forecast') runSimulation();
+}
+
+async function runSimulation() {
+    const target = document.getElementById('sim-target-input').value;
+    const unit = document.getElementById('sim-unit-select').value;
+    const res = await fetch(`/api/simulate?target=${target}&unit=${unit}`);
+    const data = await res.json();
+    // Render 4 kartu KPI simulasi dan tabel rincian tahapan kimiawi
+}
+```

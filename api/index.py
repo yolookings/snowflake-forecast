@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import snowflake.connector
@@ -101,3 +101,164 @@ def get_mrp_data():
             status_code=500, 
             detail=f"Error saat mengeksekusi query Snowflake: {str(exc)}"
         )
+
+# Rute Simulasi Forecast Kebutuhan Bahan Kimia & Ore (Tahap Padatan -> Buih -> Bubuk)
+@app.get("/api/simulate")
+@app.get("/simulate")
+def simulate_forecast(
+    target: float = Query(1000.0, description="Target produksi emas"),
+    unit: str = Query("kg", description="Satuan target: kg atau ton")
+):
+    """
+    Simulasi kebutuhan material & reagen kimia untuk produksi emas
+    berdasarkan siklus metalurgi:
+    1. Padatan (Bijih Emas / Ore)
+    2. Flotasi (Padatan -> Buih / Froth Flotation)
+    3. Pelindian Konsentrat (Buih -> Larutan Kaya)
+    4. Presipitasi & Smelting (Larutan -> Bubuk Emas & Batangan)
+    """
+    target_kg = target * 1000.0 if unit.lower() == "ton" else target
+
+    # Formulasi kebutuhan per 1 kg emas
+    stages = [
+        {
+            "stage_id": 1,
+            "stage_name": "Tahap 1: Penambangan & Preparasi Bijih (Padatan)",
+            "description": "Penggalian dan penghancuran batuan bijih mentah (ore) menjadi butiran halus.",
+            "items": [
+                {
+                    "name": "Gold Ore (Bijih Emas Mentah)",
+                    "category": "Raw Material",
+                    "rate_per_kg": 150.0,
+                    "unit": "Tonne",
+                    "unit_cost_idr": 1200000.0,
+                    "function": "Bahan baku batuan pembawa mineral emas (kadar rata-rata ~6.67 g/t)."
+                }
+            ]
+        },
+        {
+            "stage_id": 2,
+            "stage_name": "Tahap 2: Flotasi Konsentrat (Padatan Menjadi Buih)",
+            "description": "Proses fisika-kimia memisahkan mineral sulfida emas dari batuan pengotor dengan menempelkan partikel ke gelembung udara hingga menjadi buih.",
+            "items": [
+                {
+                    "name": "Collector (Potassium Amyl Xanthate / PAX)",
+                    "category": "Flotation Reagent",
+                    "rate_per_kg": 22.5,
+                    "unit": "Kg",
+                    "unit_cost_idr": 45000.0,
+                    "function": "Mengikat partikel emas agar bersifat hidrofobik dan menempel ke gelembung."
+                },
+                {
+                    "name": "Frother (Methyl Isobutyl Carbinol / MIBC)",
+                    "category": "Flotation Reagent",
+                    "rate_per_kg": 7.5,
+                    "unit": "Kg",
+                    "unit_cost_idr": 65000.0,
+                    "function": "Membentuk dan menstabilkan busa/buih di permukaan sel flotasi."
+                },
+                {
+                    "name": "pH Modifier (Quicklime / Kapur Tohor)",
+                    "category": "Flotation Reagent",
+                    "rate_per_kg": 225.0,
+                    "unit": "Kg",
+                    "unit_cost_idr": 2500.0,
+                    "function": "Mengatur alkalinitas bubur bijih (pH 10.5 - 11.0) untuk efisiensi flotasi."
+                }
+            ]
+        },
+        {
+            "stage_id": 3,
+            "stage_name": "Tahap 3: Pelindian Konsentrat (Buih Menjadi Larutan Kaya)",
+            "description": "Buih konsentrat dilarutkan menggunakan larutan sianida untuk melarutkan logam emas menjadi kompleks aurocyanide cair.",
+            "items": [
+                {
+                    "name": "Sodium Cyanide (NaCN)",
+                    "category": "Leaching Agent",
+                    "rate_per_kg": 45.0,
+                    "unit": "Kg",
+                    "unit_cost_idr": 35000.0,
+                    "function": "Reagen pelarut utama untuk mengekstraksi emas dari konsentrat padat ke larutan."
+                },
+                {
+                    "name": "Karbon Aktif (Activated Carbon)",
+                    "category": "Adsorption",
+                    "rate_per_kg": 12.0,
+                    "unit": "Kg",
+                    "unit_cost_idr": 40000.0,
+                    "function": "Menyerap (adsorpsi) kompleks emas terlarut dari cairan pulp (proses CIL/CIP)."
+                }
+            ]
+        },
+        {
+            "stage_id": 4,
+            "stage_name": "Tahap 4: Presipitasi & Peleburan (Larutan Menjadi Bubuk Emas & Batangan)",
+            "description": "Emas terlarut diendapkan kembali menjadi bubuk logam (presipitat) lalu dilebur menjadi emas batangan dore.",
+            "items": [
+                {
+                    "name": "Zinc Powder (Merrill-Crowe Precipitation)",
+                    "category": "Precipitant",
+                    "rate_per_kg": 1.2,
+                    "unit": "Kg",
+                    "unit_cost_idr": 75000.0,
+                    "function": "Mereduksi larutan emas menjadi endapan bubuk emas (gold precipitate powder)."
+                },
+                {
+                    "name": "Smelting Flux (Borax & Silica Sand)",
+                    "category": "Smelting Flux",
+                    "rate_per_kg": 2.5,
+                    "unit": "Kg",
+                    "unit_cost_idr": 30000.0,
+                    "function": "Campuran peleburan untuk mengikat terak/kotoran saat bubuk emas dicairkan di tanur."
+                },
+                {
+                    "name": "Electricity (Daya Listrik Tanur & Pabrik)",
+                    "category": "Energy & Power",
+                    "rate_per_kg": 1200.0,
+                    "unit": "kWh",
+                    "unit_cost_idr": 1500.0,
+                    "function": "Energi operasional ball mill, sel flotasi, electrowinning, dan induction furnace."
+                }
+            ]
+        }
+    ]
+
+    total_cost_overall = 0.0
+    detailed_stages = []
+
+    for st in stages:
+        st_items = []
+        st_cost = 0.0
+        for item in st["items"]:
+            total_qty = target_kg * item["rate_per_kg"]
+            cost = total_qty * item["unit_cost_idr"]
+            st_cost += cost
+            st_items.append({
+                "name": item["name"],
+                "category": item["category"],
+                "total_quantity": total_qty,
+                "unit": item["unit"],
+                "unit_cost_idr": item["unit_cost_idr"],
+                "total_cost_idr": cost,
+                "function": item["function"]
+            })
+        total_cost_overall += st_cost
+        detailed_stages.append({
+            "stage_id": st["stage_id"],
+            "stage_name": st["stage_name"],
+            "description": st["description"],
+            "subtotal_cost_idr": st_cost,
+            "items": st_items
+        })
+
+    return {
+        "status": "success",
+        "input": {
+            "target_input": target,
+            "unit": unit,
+            "target_gold_kg": target_kg,
+            "target_gold_ton": target_kg / 1000.0
+        },
+        "total_cost_idr": total_cost_overall,
+        "stages": detailed_stages
+    }
