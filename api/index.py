@@ -1,4 +1,5 @@
 import os
+import re
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -18,6 +19,11 @@ app.add_middleware(
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INDEX_FILE_PATH = os.path.join(BASE_DIR, "index.html")
 ANTAM_LOGO_FILE_PATH = os.path.join(BASE_DIR, "antam.svg")
+
+
+def material_key(name: str) -> str:
+    """Stable key shared by the three MRP tables and browser stock inputs."""
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
 
 def get_snowflake_connection():
     """
@@ -115,7 +121,7 @@ def get_mrp_data():
 @app.get("/api/simulate")
 @app.get("/simulate")
 def simulate_forecast(
-    target: float = Query(1000.0, description="Target produksi emas"),
+    target: float = Query(1000.0, gt=0, description="Target produksi emas"),
     unit: str = Query("kg", description="Satuan target: kg atau ton")
 ):
     """
@@ -233,30 +239,98 @@ def simulate_forecast(
     ]
 
     total_cost_overall = 0.0
+    total_procurement_cost = 0.0
+    total_available_cost = 0.0
     detailed_stages = []
+    consolidation = []
+    calculation = []
+    summary = []
 
     for st in stages:
         st_items = []
         st_cost = 0.0
+        st_procurement_cost = 0.0
         for item in st["items"]:
+            material_id = material_key(item["name"])
             total_qty = target_kg * item["rate_per_kg"]
             cost = total_qty * item["unit_cost_idr"]
+
+            # Stok belum tersedia dari view Snowflake saat ini. Nilai 0 menjadi
+            # baseline yang dapat dioverride oleh tabel kalkulasi di frontend.
+            warehouse_stock = 0.0
+            in_transit_stock = 0.0
+            available_stock = warehouse_stock + in_transit_stock
+            net_required = max(total_qty - available_stock, 0.0)
+            covered_quantity = min(total_qty, available_stock)
+            procurement_cost = net_required * item["unit_cost_idr"]
+            covered_cost = covered_quantity * item["unit_cost_idr"]
+            status = "covered" if net_required == 0 else "partial" if available_stock > 0 else "need"
+            formula = f'{item["rate_per_kg"]:g} {item["unit"]} / kg Au'
+
+            base_row = {
+                "material_id": material_id,
+                "name": item["name"],
+                "category": item["category"],
+                "stage_id": st["stage_id"],
+                "stage_name": st["stage_name"],
+                "formula_rate_per_kg": item["rate_per_kg"],
+                "formula_unit": item["unit"],
+                "formula": formula,
+                "function": item["function"],
+                "unit_cost_idr": item["unit_cost_idr"],
+            }
+            consolidation.append({
+                **base_row,
+                "gross_requirement": total_qty,
+            })
+            calculation.append({
+                **base_row,
+                "gross_requirement": total_qty,
+                "warehouse_stock": warehouse_stock,
+                "in_transit_stock": in_transit_stock,
+                "available_stock": available_stock,
+                "net_required": net_required,
+                "covered_quantity": covered_quantity,
+                "procurement_cost_idr": procurement_cost,
+                "status": status,
+            })
+            summary.append({
+                "material_id": material_id,
+                "name": item["name"],
+                "category": item["category"],
+                "unit": item["unit"],
+                "net_required": net_required,
+                "unit_cost_idr": item["unit_cost_idr"],
+                "procurement_cost_idr": procurement_cost,
+                "status": status,
+            })
+
             st_cost += cost
+            st_procurement_cost += procurement_cost
+            total_cost_overall += cost
+            total_procurement_cost += procurement_cost
+            total_available_cost += covered_cost
             st_items.append({
+                "material_id": material_id,
                 "name": item["name"],
                 "category": item["category"],
                 "total_quantity": total_qty,
                 "unit": item["unit"],
                 "unit_cost_idr": item["unit_cost_idr"],
                 "total_cost_idr": cost,
+                "procurement_cost_idr": procurement_cost,
+                "warehouse_stock": warehouse_stock,
+                "in_transit_stock": in_transit_stock,
+                "net_required": net_required,
+                "status": status,
                 "function": item["function"]
             })
-        total_cost_overall += st_cost
         detailed_stages.append({
             "stage_id": st["stage_id"],
             "stage_name": st["stage_name"],
             "description": st["description"],
             "subtotal_cost_idr": st_cost,
+            "procurement_cost_idr": st_procurement_cost,
             "items": st_items
         })
 
@@ -269,5 +343,14 @@ def simulate_forecast(
             "target_gold_ton": target_kg / 1000.0
         },
         "total_cost_idr": total_cost_overall,
+        "total_procurement_cost_idr": total_procurement_cost,
+        "total_available_cost_idr": total_available_cost,
+        "stock_policy": {
+            "source": "manual",
+            "note": "Stok gudang dan stok di jalan diisi pada tabel kalkulasi."
+        },
+        "consolidation": consolidation,
+        "calculation": calculation,
+        "summary": summary,
         "stages": detailed_stages
     }

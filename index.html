@@ -1427,6 +1427,297 @@
             border-top-color: var(--app-primary);
         }
 
+        /* MRP tables ------------------------------------------------------- */
+        #simulation-stages-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .mrp-stock-note {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            border: 1px solid #cfe5e1;
+            border-radius: var(--app-radius);
+            padding: 12px 16px;
+            background: #f0faf8;
+            color: var(--app-text);
+            font-size: 11px;
+        }
+
+        .mrp-stock-note > div {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .mrp-stock-note strong {
+            color: var(--app-primary-deep);
+            font-size: 12px;
+        }
+
+        .mrp-stock-note span {
+            color: var(--app-muted);
+        }
+
+        .mrp-stock-note__source {
+            flex: 0 0 auto;
+            border-radius: 999px;
+            padding: 5px 9px;
+            background: rgba(0, 113, 106, 0.1);
+            color: var(--app-primary) !important;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .mrp-table-section {
+            overflow: hidden;
+            border: 1px solid var(--app-border);
+            border-radius: var(--app-radius);
+            background: var(--app-surface);
+            box-shadow: 0 1px 0 rgba(19, 38, 58, 0.02);
+        }
+
+        .mrp-section-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            border-bottom: 1px solid var(--app-border);
+            padding: 17px 18px 14px;
+        }
+
+        .mrp-section-kicker {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--app-primary);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .mrp-section-heading h3 {
+            color: var(--app-text);
+            font-size: 15px;
+            letter-spacing: -0.02em;
+        }
+
+        .mrp-section-heading p {
+            max-width: 720px;
+            margin-top: 4px;
+            color: var(--app-muted);
+            font-size: 11px;
+            line-height: 1.45;
+        }
+
+        .mrp-section-count {
+            flex: 0 0 auto;
+            color: var(--app-primary);
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .mrp-table-wrap {
+            overflow-x: auto;
+        }
+
+        .mrp-table {
+            width: 100%;
+            min-width: 1020px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .mrp-table th {
+            padding: 11px 14px;
+            border-bottom: 1px solid var(--app-border);
+            background: #f1f7f6;
+            color: #45656a;
+            font-size: 9px;
+            letter-spacing: 0.07em;
+            white-space: nowrap;
+        }
+
+        .mrp-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #edf2f2;
+            color: #31485d;
+            font-size: 11px;
+            vertical-align: middle;
+        }
+
+        .mrp-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .mrp-table tbody tr:hover td {
+            background: #f7fbfa;
+        }
+
+        .mrp-material-name {
+            max-width: 235px;
+            color: var(--app-text);
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .mrp-material-meta {
+            margin-top: 3px;
+            color: var(--app-muted);
+            font-size: 10px;
+        }
+
+        .mrp-category {
+            display: inline-flex;
+            border-radius: 999px;
+            padding: 4px 8px;
+            background: var(--app-primary-soft);
+            color: var(--app-primary);
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .mrp-formula {
+            display: inline-flex;
+            border-radius: 5px;
+            padding: 5px 7px;
+            background: #fff3e6;
+            color: #a6530a;
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .mrp-unit {
+            color: var(--app-muted);
+            font-size: 10px;
+        }
+
+        .mrp-function {
+            max-width: 270px;
+            color: var(--app-muted) !important;
+            line-height: 1.45;
+        }
+
+        .mrp-input-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid var(--app-border-strong);
+            border-radius: 6px;
+            padding: 3px 7px;
+            background: #fbfcfe;
+        }
+
+        .stock-input {
+            width: 78px;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--app-text);
+            font-size: 11px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .mrp-input-wrap:focus-within {
+            border-color: var(--app-primary);
+            box-shadow: 0 0 0 3px rgba(0, 113, 106, 0.12);
+        }
+
+        .mrp-input-wrap > span {
+            color: var(--app-muted);
+            font-size: 9px;
+        }
+
+        .mrp-net-value--need {
+            color: #a6432d !important;
+        }
+
+        .mrp-net-value--partial {
+            color: #a6530a !important;
+        }
+
+        .mrp-net-value--covered {
+            color: var(--app-primary) !important;
+        }
+
+        .mrp-status {
+            display: inline-flex;
+            border-radius: 999px;
+            padding: 5px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .mrp-status--need {
+            background: #fff0ed;
+            color: #a6432d;
+        }
+
+        .mrp-status--partial {
+            background: #fff3e6;
+            color: #a6530a;
+        }
+
+        .mrp-status--covered {
+            background: #e7f4f2;
+            color: var(--app-primary);
+        }
+
+        .mrp-summary-strip {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            border-bottom: 1px solid var(--app-border);
+            padding: 12px 18px;
+            background: #fbfcfe;
+        }
+
+        .mrp-summary-strip > div {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            border-left: 2px solid var(--app-primary);
+            padding-left: 9px;
+        }
+
+        .mrp-summary-strip > div:nth-child(2) {
+            border-left-color: var(--antam-orange);
+        }
+
+        .mrp-summary-strip > div:nth-child(3) {
+            border-left-color: var(--app-success);
+        }
+
+        .mrp-summary-strip span {
+            color: var(--app-muted);
+            font-size: 10px;
+        }
+
+        .mrp-summary-strip strong {
+            color: var(--app-text);
+            font-size: 14px;
+            letter-spacing: -0.02em;
+        }
+
+        .mrp-row--covered td {
+            background: #fcfefd;
+        }
+
+        .mrp-error {
+            color: var(--antam-red) !important;
+        }
+
         @media (max-width: 1100px) {
             .stats-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1578,6 +1869,28 @@
                 align-items: flex-start;
                 flex-direction: column;
             }
+
+            .mrp-stock-note,
+            .mrp-section-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .mrp-stock-note__source {
+                align-self: flex-start;
+            }
+
+            .mrp-summary-strip {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .mrp-section-heading {
+                gap: 8px;
+            }
+
+            .mrp-section-count {
+                white-space: normal;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1616,9 +1929,9 @@
                 <span class="nav-icon">▤</span>
                 <span>Data Viewer</span>
             </a>
-            <a class="nav-item" onclick="switchTab('forecast')" title="Forecast dan Simulator">
+            <a class="nav-item" onclick="switchTab('forecast')" title="Perhitungan MRP">
                 <span class="nav-icon">Σ</span>
-                <span>Forecast & Simulator</span>
+                <span>Perhitungan MRP</span>
             </a>
         </nav>
 
@@ -1797,9 +2110,9 @@
             <section id="tab-forecast" class="tab-panel">
                 <!-- Simulator Header & Controls -->
                 <div class="simulator-header">
-                    <h2 style="font-size: 18px; margin-bottom: 6px;">Kalkulator Simulasi Kebutuhan Bijih & Kimiawi (MRP Forecast)</h2>
+                    <h2 style="font-size: 18px; margin-bottom: 6px;">Perhitungan kebutuhan material untuk target emas</h2>
                     <p style="font-size: 13px; color: #cbd5e1;">
-                        Prediksi kebutuhan batuan bijih mentah (*Ore*) dan campuran reagen kimiawi dari fase <b>Padatan &rarr; Buih (*Flotation*) &rarr; Bubuk Emas (*Precipitate*)</b>.
+                        Masukkan target produksi, lalu tinjau formula, stok tersedia, dan jumlah bahan yang masih perlu dipenuhi.
                     </p>
 
                     <div class="simulator-controls">
@@ -1813,12 +2126,12 @@
                             </select>
                         </div>
                         <button class="btn-calc" onclick="runSimulation()">
-                            Hitung Kebutuhan Bahan &rarr;
+                            Hitung Kebutuhan MRP &rarr;
                         </button>
                     </div>
 
                     <div class="presets">
-                        <span>Preset Cepat:</span>
+                        <span>Preset target:</span>
                         <button class="preset-btn" onclick="setPreset(500, 'kg')">500 Kg</button>
                         <button class="preset-btn" onclick="setPreset(1000, 'kg')">1.000 Kg (1 Ton)</button>
                         <button class="preset-btn" onclick="setPreset(5000, 'kg')">5.000 Kg (5 Ton)</button>
@@ -1834,25 +2147,25 @@
                         <div class="stat-subtext" id="sim-gold-sub">Setara 1.000.000 gram</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Total Batuan Ore Dibutuhkan</div>
+                        <div class="stat-label">Bahan Dasar Bruto</div>
                         <div class="stat-value" id="sim-ore-kpi">150.000 Ton</div>
-                        <div class="stat-subtext">Kadar rata-rata ~6.67 g/ton</div>
+                        <div class="stat-subtext">Kebutuhan ore sebelum dikurangi stok</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Total Anggaran Pengadaan</div>
+                        <div class="stat-label">Estimasi Pengadaan</div>
                         <div class="stat-value" id="sim-cost-kpi">Rp 186 Miliar</div>
-                        <div class="stat-subtext">Termasuk Ore, Kimiawi & Daya</div>
+                        <div class="stat-subtext">Nilai kebutuhan setelah stok</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Reagen Kimiawi Utama</div>
-                        <div class="stat-value" id="sim-chem-kpi">301 Ton</div>
-                        <div class="stat-subtext">PAX, MIBC, Kapur, NaCN, Zn</div>
+                        <div class="stat-label">Material Tertutup Stok</div>
+                        <div class="stat-value" id="sim-chem-kpi">0 item</div>
+                        <div class="stat-subtext">Terpenuhi oleh gudang atau stok di jalan</div>
                     </div>
                 </div>
 
-                <!-- Dynamic Stages Breakdown -->
+                <!-- Tiga tabel MRP: konsolidasi, kalkulasi, summary -->
                 <div id="simulation-stages-container">
-                    <!-- Populated by JavaScript -->
+                    <div class="empty-cell"><div class="spinner"></div> Menyiapkan tabel MRP...</div>
                 </div>
             </section>
 
@@ -1883,8 +2196,8 @@
                 document.getElementById('page-subtitle').innerText = "Data Transaksional Tabel & View v_mrp_calculation dari Data Warehouse";
             } else if (tabId === 'forecast') {
                 navLinks[2].classList.add('active');
-                document.getElementById('page-title').innerText = "Forecast & Metallurgical Material Simulator";
-                document.getElementById('page-subtitle').innerText = "Simulasi Kebutuhan Bahan Kimia & Ore (Padatan -> Buih -> Bubuk Emas)";
+                document.getElementById('page-title').innerText = "Perhitungan MRP Material Emas";
+                document.getElementById('page-subtitle').innerText = "Formula konsolidasi, kebutuhan bersih, dan summary pengadaan material";
                 runSimulation();
             }
         }
@@ -2027,7 +2340,284 @@
             `).join('');
         }
 
-        // Forecast & Simulation Logic
+        // MRP Calculation Logic
+        let mrpRows = [];
+        let mrpStock = {};
+        const MRP_STOCK_STORAGE_KEY = 'antam_mrp_stock_v1';
+
+        function formatNumber(value, maximumFractionDigits = 2) {
+            return (Number(value) || 0).toLocaleString('id-ID', {
+                maximumFractionDigits,
+                minimumFractionDigits: 0
+            });
+        }
+
+        function formatCurrency(value) {
+            return 'Rp ' + formatNumber(value, 0);
+        }
+
+        function formatInputNumber(value) {
+            const number = Number(value) || 0;
+            return Number.isInteger(number) ? String(number) : number.toFixed(2);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, character => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            }[character]));
+        }
+
+        function readStoredStock() {
+            try {
+                return JSON.parse(localStorage.getItem(MRP_STOCK_STORAGE_KEY) || '{}') || {};
+            } catch (error) {
+                return {};
+            }
+        }
+
+        function saveStoredStock() {
+            try {
+                localStorage.setItem(MRP_STOCK_STORAGE_KEY, JSON.stringify(mrpStock));
+            } catch (error) {
+                console.warn('Stock MRP tidak dapat disimpan di browser.', error);
+            }
+        }
+
+        function initialiseStock(rows) {
+            const stored = readStoredStock();
+            mrpStock = {};
+            rows.forEach(row => {
+                const saved = stored[row.material_id] || {};
+                const warehouse = Number(saved.warehouse ?? row.warehouse_stock ?? 0);
+                const transit = Number(saved.transit ?? row.in_transit_stock ?? 0);
+                mrpStock[row.material_id] = {
+                    warehouse: Number.isFinite(warehouse) ? Math.max(warehouse, 0) : 0,
+                    transit: Number.isFinite(transit) ? Math.max(transit, 0) : 0
+                };
+            });
+        }
+
+        function getCalculatedRows() {
+            return mrpRows.map(row => {
+                const stock = mrpStock[row.material_id] || { warehouse: 0, transit: 0 };
+                const gross = Number(row.gross_requirement) || 0;
+                const warehouse = Math.max(Number(stock.warehouse) || 0, 0);
+                const transit = Math.max(Number(stock.transit) || 0, 0);
+                const available = warehouse + transit;
+                const covered = Math.min(gross, available);
+                const net = Math.max(gross - available, 0);
+                const status = net === 0 ? 'covered' : available > 0 ? 'partial' : 'need';
+
+                return {
+                    ...row,
+                    warehouse_stock: warehouse,
+                    in_transit_stock: transit,
+                    available_stock: available,
+                    covered_quantity: covered,
+                    net_required: net,
+                    procurement_cost_idr: net * (Number(row.unit_cost_idr) || 0),
+                    status
+                };
+            });
+        }
+
+        function statusBadge(status) {
+            const labels = {
+                covered: 'Tertutup stok',
+                partial: 'Sebagian',
+                need: 'Perlu pengadaan'
+            };
+            return `<span class="mrp-status mrp-status--${status}">${labels[status] || status}</span>`;
+        }
+
+        function categoryBadge(category) {
+            const label = category === 'Raw Material' ? 'Bahan dasar' :
+                category === 'Energy & Power' ? 'Energi' : 'Bahan kimia';
+            return `<span class="mrp-category">${escapeHtml(label)}</span>`;
+        }
+
+        function materialCell(row) {
+            return `
+                <div class="mrp-material-name">${escapeHtml(row.name)}</div>
+                <div class="mrp-material-meta">${escapeHtml(row.category)}</div>
+            `;
+        }
+
+        function renderMprTables() {
+            const container = document.getElementById('simulation-stages-container');
+            const rows = getCalculatedRows();
+
+            if (!rows.length) {
+                container.innerHTML = '<div class="empty-cell">Tidak ada formula material yang tersedia.</div>';
+                return;
+            }
+
+            const needRows = rows.filter(row => row.net_required > 0);
+            const coveredRows = rows.filter(row => row.net_required === 0);
+            const procurementCost = needRows.reduce((total, row) => total + row.procurement_cost_idr, 0);
+            const rawMaterial = rows.find(row => row.category === 'Raw Material');
+
+            document.getElementById('sim-ore-kpi').innerText = rawMaterial
+                ? `${formatNumber(rawMaterial.gross_requirement)} ${rawMaterial.formula_unit}`
+                : '-';
+            document.getElementById('sim-cost-kpi').innerText = formatCurrency(procurementCost);
+            document.getElementById('sim-chem-kpi').innerText = `${coveredRows.length} item`;
+            document.getElementById('sim-chem-kpi').title = `${coveredRows.length} dari ${rows.length} material tertutup stok`;
+
+            container.innerHTML = `
+                <div class="mrp-stock-note">
+                    <div>
+                        <strong>Stok menjadi pengurang kebutuhan.</strong>
+                        <span>Isi stok gudang dan stok di jalan pada tabel kalkulasi. Nilainya tersimpan di browser untuk material yang sama.</span>
+                    </div>
+                    <span class="mrp-stock-note__source">Sumber stok: input pengguna</span>
+                </div>
+
+                <section class="mrp-table-section" aria-labelledby="mrp-consolidation-title">
+                    <div class="mrp-section-heading">
+                        <div>
+                            <span class="mrp-section-kicker">Tabel 1</span>
+                            <h3 id="mrp-consolidation-title">Konsolidasi formula material</h3>
+                            <p>Formula standar menunjukkan rasio kebutuhan setiap material untuk menghasilkan 1 kg emas.</p>
+                        </div>
+                        <span class="mrp-section-count">${rows.length} material</span>
+                    </div>
+                    <div class="mrp-table-wrap">
+                        <table class="mrp-table">
+                            <thead>
+                                <tr>
+                                    <th>Bahan / reagen</th>
+                                    <th>Kategori</th>
+                                    <th>Tahap proses</th>
+                                    <th>Formula standar</th>
+                                    <th>Kebutuhan bruto</th>
+                                    <th>Fungsi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rows.map(row => `
+                                    <tr>
+                                        <td>${materialCell(row)}</td>
+                                        <td>${categoryBadge(row.category)}</td>
+                                        <td>${escapeHtml(row.stage_name.replace(/^Tahap\\s+\\d+:\\s*/, ''))}</td>
+                                        <td><span class="mrp-formula">${escapeHtml(row.formula)}</span></td>
+                                        <td><strong>${formatNumber(row.gross_requirement)}</strong> <span class="mrp-unit">${escapeHtml(row.formula_unit)}</span></td>
+                                        <td class="mrp-function">${escapeHtml(row.function)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="mrp-table-section" aria-labelledby="mrp-calculation-title">
+                    <div class="mrp-section-heading">
+                        <div>
+                            <span class="mrp-section-kicker">Tabel 2</span>
+                            <h3 id="mrp-calculation-title">Kalkulasi kebutuhan setelah stok</h3>
+                            <p>Kebutuhan neto dihitung dari kebutuhan bruto dikurangi stok gudang dan stok di jalan.</p>
+                        </div>
+                        <span class="mrp-section-count">${needRows.length} perlu dipenuhi</span>
+                    </div>
+                    <div class="mrp-table-wrap">
+                        <table class="mrp-table mrp-table--calculation">
+                            <thead>
+                                <tr>
+                                    <th>Bahan / reagen</th>
+                                    <th>Kebutuhan bruto</th>
+                                    <th>Stok gudang</th>
+                                    <th>Stok di jalan</th>
+                                    <th>Total tersedia</th>
+                                    <th>Kebutuhan neto</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rows.map(row => `
+                                    <tr>
+                                        <td>${materialCell(row)}</td>
+                                        <td><strong>${formatNumber(row.gross_requirement)}</strong> <span class="mrp-unit">${escapeHtml(row.formula_unit)}</span></td>
+                                        <td>
+                                            <label class="mrp-input-wrap">
+                                                <input class="stock-input" type="number" min="0" step="any" value="${formatInputNumber(row.warehouse_stock)}" data-material-id="${escapeHtml(row.material_id)}" data-stock-type="warehouse" onchange="updateStock(this)" aria-label="Stok gudang ${escapeHtml(row.name)}">
+                                                <span>${escapeHtml(row.formula_unit)}</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="mrp-input-wrap">
+                                                <input class="stock-input" type="number" min="0" step="any" value="${formatInputNumber(row.in_transit_stock)}" data-material-id="${escapeHtml(row.material_id)}" data-stock-type="transit" onchange="updateStock(this)" aria-label="Stok di jalan ${escapeHtml(row.name)}">
+                                                <span>${escapeHtml(row.formula_unit)}</span>
+                                            </label>
+                                        </td>
+                                        <td><strong>${formatNumber(row.available_stock)}</strong> <span class="mrp-unit">${escapeHtml(row.formula_unit)}</span></td>
+                                        <td class="mrp-net-value mrp-net-value--${row.status}"><strong>${formatNumber(row.net_required)}</strong> <span class="mrp-unit">${escapeHtml(row.formula_unit)}</span></td>
+                                        <td>${statusBadge(row.status)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="mrp-table-section" aria-labelledby="mrp-summary-title">
+                    <div class="mrp-section-heading">
+                        <div>
+                            <span class="mrp-section-kicker">Tabel 3</span>
+                            <h3 id="mrp-summary-title">Summary kebutuhan pengadaan</h3>
+                            <p>Angka di bawah adalah jumlah material yang masih perlu dipenuhi setelah mempertimbangkan ketersediaan.</p>
+                        </div>
+                        <span class="mrp-section-count">${formatCurrency(procurementCost)}</span>
+                    </div>
+                    <div class="mrp-summary-strip">
+                        <div><span>Material dianalisis</span><strong>${rows.length}</strong></div>
+                        <div><span>Perlu pengadaan</span><strong>${needRows.length}</strong></div>
+                        <div><span>Tertutup stok</span><strong>${coveredRows.length}</strong></div>
+                        <div><span>Estimasi biaya</span><strong>${formatCurrency(procurementCost)}</strong></div>
+                    </div>
+                    <div class="mrp-table-wrap">
+                        <table class="mrp-table mrp-table--summary">
+                            <thead>
+                                <tr>
+                                    <th>Bahan / reagen</th>
+                                    <th>Kategori</th>
+                                    <th>Kebutuhan neto</th>
+                                    <th>Satuan</th>
+                                    <th>Estimasi pengadaan</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rows.map(row => `
+                                    <tr class="${row.net_required === 0 ? 'mrp-row--covered' : ''}">
+                                        <td>${materialCell(row)}</td>
+                                        <td>${categoryBadge(row.category)}</td>
+                                        <td class="mrp-net-value mrp-net-value--${row.status}"><strong>${formatNumber(row.net_required)}</strong></td>
+                                        <td>${escapeHtml(row.formula_unit)}</td>
+                                        <td class="cost-val">${formatCurrency(row.procurement_cost_idr)}</td>
+                                        <td>${statusBadge(row.status)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            `;
+        }
+
+        function updateStock(input) {
+            const materialId = input.dataset.materialId;
+            const stockType = input.dataset.stockType;
+            if (!mrpStock[materialId]) mrpStock[materialId] = { warehouse: 0, transit: 0 };
+            mrpStock[materialId][stockType] = Math.max(Number(input.value) || 0, 0);
+            input.value = formatInputNumber(mrpStock[materialId][stockType]);
+            saveStoredStock();
+            renderMprTables();
+        }
+
         function setPreset(val, unit) {
             document.getElementById('sim-target-input').value = val;
             document.getElementById('sim-unit-select').value = unit;
@@ -2035,90 +2625,32 @@
         }
 
         async function runSimulation() {
-            const targetVal = parseFloat(document.getElementById('sim-target-input').value) || 1000;
+            const rawTarget = parseFloat(document.getElementById('sim-target-input').value);
+            const targetVal = Math.max(rawTarget || 1000, 1);
             const unit = document.getElementById('sim-unit-select').value;
             const container = document.getElementById('simulation-stages-container');
 
-            container.innerHTML = '<div class="empty-cell"><div class="spinner"></div> Menghitung kebutuhan bahan kimiawi & bijih...</div>';
+            document.getElementById('sim-target-input').value = targetVal;
+            container.innerHTML = '<div class="empty-cell"><div class="spinner"></div> Menghitung tiga tabel MRP...</div>';
 
             try {
-                // Call API simulate endpoint
-                const res = await fetch(`/api/simulate?target=${targetVal}&unit=${unit}`);
+                const res = await fetch(`/api/simulate?target=${encodeURIComponent(targetVal)}&unit=${encodeURIComponent(unit)}`);
                 if (!res.ok) throw new Error("HTTP error " + res.status);
                 const json = await res.json();
+                const targetKg = Number(json.input.target_gold_kg) || 0;
 
-                const targetKg = json.input.target_gold_kg;
-                const totalCost = json.total_cost_idr;
-
-                // Update Simulation KPIs
-                document.getElementById('sim-gold-kpi').innerText = targetKg >= 1000 ? 
-                    (targetKg / 1000).toLocaleString('id-ID') + ' Ton' : 
-                    targetKg.toLocaleString('id-ID') + ' kg';
-                document.getElementById('sim-gold-sub').innerText = `Setara ${targetKg.toLocaleString('id-ID')} kg emas batangan`;
-
-                const oreItem = json.stages[0].items[0];
-                document.getElementById('sim-ore-kpi').innerText = Number(oreItem.total_quantity).toLocaleString('id-ID') + ' Ton';
-                document.getElementById('sim-cost-kpi').innerText = 'Rp ' + totalCost.toLocaleString('id-ID');
-
-                // Total chemical weight (PAX + MIBC + Lime + Cyanide + Carbon + Zinc + Flux)
-                let totalChemKg = 0;
-                json.stages.forEach(st => {
-                    st.items.forEach(it => {
-                        if (it.unit === 'Kg') totalChemKg += it.total_quantity;
-                    });
-                });
-                document.getElementById('sim-chem-kpi').innerText = totalChemKg >= 1000 ? 
-                    (totalChemKg / 1000).toLocaleString('id-ID') + ' Ton' : 
-                    totalChemKg.toLocaleString('id-ID') + ' Kg';
-
-                // Render Stages Cards
-                container.innerHTML = json.stages.map(st => `
-                    <div class="stage-card">
-                        <div class="stage-header">
-                            <div class="stage-title">
-                                <span class="stage-badge">Tahap ${st.stage_id}</span>
-                                <span class="stage-name">${st.stage_name}</span>
-                            </div>
-                            <div class="stage-cost">Subtotal: Rp ${st.subtotal_cost_idr.toLocaleString('id-ID')}</div>
-                        </div>
-                        <div class="stage-body">
-                            <p class="stage-desc">${st.description}</p>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Bahan / Reagen Kimia</th>
-                                        <th>Fungsi Kimiawi</th>
-                                        <th>Total Kebutuhan</th>
-                                        <th>Satuan</th>
-                                        <th>Estimasi Biaya Satuan</th>
-                                        <th class="text-right">Subtotal Biaya (IDR)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${st.items.map(it => `
-                                        <tr>
-                                            <td>
-                                                <div style="font-weight: 700; color: var(--primary);">${it.name}</div>
-                                                <span class="chem-tag">${it.category}</span>
-                                            </td>
-                                            <td style="font-size: 12px; color: #475569; max-width: 280px;">${it.function}</td>
-                                            <td><b>${Number(it.total_quantity).toLocaleString('id-ID')}</b></td>
-                                            <td>${it.unit}</td>
-                                            <td>Rp ${Number(it.unit_cost_idr).toLocaleString('id-ID')}</td>
-                                            <td class="text-right cost-val">Rp ${Number(it.total_cost_idr).toLocaleString('id-ID')}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `).join('');
-
+                mrpRows = Array.isArray(json.consolidation) ? json.consolidation : [];
+                initialiseStock(mrpRows);
+                document.getElementById('sim-gold-kpi').innerText = targetKg >= 1000
+                    ? `${formatNumber(targetKg / 1000)} Ton`
+                    : `${formatNumber(targetKg)} kg`;
+                document.getElementById('sim-gold-sub').innerText = `Setara ${formatNumber(targetKg)} kg emas batangan`;
+                renderMprTables();
             } catch (err) {
-                console.error("Simulation error:", err);
+                console.error("MRP calculation error:", err);
                 container.innerHTML = `
-                    <div class="empty-cell" style="color: #ef4444;">
-                        Gagal menghitung simulasi: ${err.message}
+                    <div class="empty-cell mrp-error">
+                        Gagal menghitung MRP: ${escapeHtml(err.message)}
                     </div>
                 `;
             }
